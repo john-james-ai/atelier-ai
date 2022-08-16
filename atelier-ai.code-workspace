@@ -1,0 +1,17 @@
+{
+	"folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+    "psi-header.variables": [
+
+        ["projectCreationYear", "2022"],
+        ["url", "https://github.com/john-james-ai/atelier-ai"],
+        ["projectname", "Atelier AI: Studio for AI Designers"],
+        ["version", "0.1.0"],
+        ["pythonversion","3.10.4"]
+    ],
+    }
+}
