@@ -1,0 +1,15 @@
+artifact_uri: file:///home/john/projects/atelier-ai/mlruns/0/928efe80c4a145edbf72b1d5bcd83c41/artifacts
+end_time: 1660643066136
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 928efe80c4a145edbf72b1d5bcd83c41
+run_uuid: 928efe80c4a145edbf72b1d5bcd83c41
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1660643065710
+status: 3
+tags: []
+user_id: john

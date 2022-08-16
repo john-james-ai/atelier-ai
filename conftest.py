@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 16th 2022 12:58:20 am                                                #
-# Modified   : Tuesday August 16th 2022 12:58:30 am                                                #
+# Modified   : Tuesday August 16th 2022 06:00:29 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -41,3 +41,13 @@ def dataframe():
 def dictionary():
     d = {"when": "now", "where": "here", "why": "why not", "how": "rtfm"}
     return d
+
+
+def pytest_collection_modifyitems(items):
+    for item in items:
+        if "io" in item.nodeid:
+            item.add_marker(pytest.mark.io)
+        elif "datasource" in item.nodeid:
+            item.add_marker(pytest.mark.datasource)
+        elif "etl" in item.nodeid:
+            item.add_marker(pytest.mark.etl)

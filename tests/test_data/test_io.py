@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Atelier - Workspace for Sculpting and Curating Data Science                         #
+# Project    : Atelier AI: Studio for AI Designers                                                 #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.4                                                                              #
 # Filename   : /test_io.py                                                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/atelier                                            #
+# URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday August 15th 2022 06:11:16 pm                                                 #
-# Modified   : Monday August 15th 2022 07:21:14 pm                                                 #
+# Modified   : Tuesday August 16th 2022 03:20:25 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -23,7 +23,7 @@ import logging
 import pandas as pd
 
 # Enter imports for modules and classes being tested here
-from atelier.data.io import IOFactory, CsvIO, YamlIO, PickleIO
+from atelier.data.io import IOFactory, CsvIO, YamlIO, PickleIO, ParquetIO
 
 # ------------------------------------------------------------------------------------------------ #
 logging.basicConfig(level=logging.DEBUG)
@@ -111,6 +111,34 @@ class TestPickleIO:
 
         yml = io.read(filepath=output_filepath)
         assert isinstance(yml, dict)
+
+        logger.info("\tCompleted {} {}".format(self.__class__.__name__, inspect.stack()[0][3]))
+
+
+@pytest.mark.io
+class TestParquetIO:
+    def test_parquet(self, caplog, dataframe):
+
+        logger.info("\tStarted {} {}".format(self.__class__.__name__, inspect.stack()[0][3]))
+
+        fileformat = "parquet"
+        output_filepath = "tests/output/io/test.parquet"
+        io = IOFactory.io(fileformat=fileformat)
+        assert isinstance(io, ParquetIO)
+
+        io.write(data=dataframe, filepath=output_filepath)
+        assert os.path.exists(output_filepath)
+
+        df = io.read(filepath=output_filepath)
+        assert isinstance(df, pd.DataFrame)
+
+        df = io.read(filepath=output_filepath, columns=["discourse_id", "discourse_type"])
+        assert isinstance(df, pd.DataFrame)
+        assert df.shape[1] == 2
+
+        filename = "ksdsdsd"
+        with pytest.raises(FileNotFoundError):
+            io.read(filepath=filename)
 
         logger.info("\tCompleted {} {}".format(self.__class__.__name__, inspect.stack()[0][3]))
 

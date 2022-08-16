@@ -1,26 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Atelier - Workspace for Sculpting and Curating Data Science                         #
+# Project    : Atelier AI: Studio for AI Designers                                                 #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.4                                                                              #
 # Filename   : /io.py                                                                              #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/atelier                                            #
+# URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday August 15th 2022 06:03:55 pm                                                 #
-# Modified   : Monday August 15th 2022 07:13:31 pm                                                 #
+# Modified   : Tuesday August 16th 2022 03:15:10 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
 # ================================================================================================ #
 from abc import ABC, abstractmethod
 import os
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 import pickle
 import logging
-import pandas as pd
+
 import yaml
 from yaml.loader import SafeLoader
 from typing import Union
@@ -121,6 +124,44 @@ class PickleIO(IO):
 # ------------------------------------------------------------------------------------------------ #
 
 
+class ParquetIO(IO):
+    """Reads, and writes Spark DataFrames to / from Parquet storage format.."""
+
+    def read(self, filepath: str, **kwargs) -> pd.DataFrame:
+        """Reads a Spark DataFrame from Parquet file resource
+        Args:
+            filepath (str): The path to the parquet file resource
+            kwargs:
+                column (list): columns to read from the file
+        Returns:
+            pd.DataFrame
+        """
+        columns = kwargs.get("columns", None)
+
+        try:
+            table = pq.read_table(source=filepath, columns=columns)
+            return table.to_pandas()
+
+        except FileNotFoundError as e:
+            logging.error("File {} was not found.".format(filepath))
+            raise e
+
+    def write(self, data: pd.DataFrame, filepath: str, **kwargs) -> None:
+        """Writes Spark DataFrame to Parquet file resource
+        Args:
+            data (pyspark.sql.DataFrame): Spark DataFrame to write
+            filepath (str): The path to the parquet file to be written
+
+        """
+
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        table = pa.Table.from_pandas(data)
+        pq.write_table(table, filepath)
+
+
+# ------------------------------------------------------------------------------------------------ #
+
+
 class IOFactory:
     """IO Factory"""
 
@@ -130,6 +171,7 @@ class IOFactory:
         "yaml": YamlIO(),
         "pickle": PickleIO(),
         "pkl": PickleIO(),
+        "parquet": ParquetIO(),
     }
 
     @staticmethod

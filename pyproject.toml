@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "atelier-ai"
-version = "0.0.1"
+version = "0.1.0"
 description = "Atelier AI: Studio for AI Designers"
 authors = [
     "John James <john.james.ai.studio@gmail.com>",
@@ -74,6 +74,9 @@ addopts = """\
     --cov-report term-missing \
     --no-cov-on-fail \
 """
+filterwarnings = [
+    "ignore::UserWarning"
+]
 
 [tool.coverage.report]
 fail_under = 100
