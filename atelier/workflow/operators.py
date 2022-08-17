@@ -4,14 +4,14 @@
 # Project    : Atelier AI: Studio for AI Designers                                                 #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.4                                                                              #
-# Filename   : \operators.py                                                                       #
+# Filename   : /operators.py                                                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday August 11th 2022 09:43:52 pm                                               #
-# Modified   : Tuesday August 16th 2022 05:44:10 am                                                #
+# Modified   : Tuesday August 16th 2022 09:50:31 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -41,7 +41,7 @@ class Operator(ABC):
     """Abstract class for operator classes
 
     Args:
-        seq (int): Sequence number of operation in a pipeline.
+        name (str): The name for the operator that distinguishes it in the pipeline.
         params (Any): Parameters for the operation.
 
     Class Variables:
@@ -53,6 +53,9 @@ class Operator(ABC):
     def __init__(self, name: str, params: dict = {}) -> None:
         self._name = name
         self._params = params
+        self._skipped = False
+        self._status = "Success"
+        self._force = None
 
         self._created = datetime.now()
         self._started = None
@@ -60,11 +63,10 @@ class Operator(ABC):
         self._duration = None
 
     def __str__(self) -> str:
-        return str(
-            "Sequence #: {}\tOperator: {}\t{}\tParams: {}".format(
-                self._seq, Operator.__name, Operator.__desc, self._params
-            )
-        )
+        return f"Operator: {self.__class__.__name__}\tStep: {self._name}\tParams: {self._params}"
+
+    def __repr__(self) -> str:
+        return f"Operator(name={self._name}, params={self._params})"
 
     def run(self, data: Any = None, context: dict = {}) -> Any:
         self._setup()
@@ -74,7 +76,7 @@ class Operator(ABC):
 
     @abstractmethod
     def execute(self, data: Any = None, context: dict = {}) -> Any:
-        pass
+        """Delegate to subclasses"""
 
     @property
     def name(self) -> str:
@@ -100,12 +102,28 @@ class Operator(ABC):
     def duration(self) -> datetime:
         return self._duration
 
+    @property
+    def skipped(self) -> bool:
+        return self._skipped
+
+    @property
+    def force(self) -> bool:
+        return self._force
+
+    @property
+    def status(self) -> bool:
+        return self._status
+
     def _setup(self) -> None:
         self._started = datetime.now()
 
     def _teardown(self) -> None:
         self._stopped = datetime.now()
         self._duration = round((self._stopped - self._started).total_seconds(), 4)
+
+    def _mark_skipped(self) -> None:
+        self._skipped = True
+        self._status = "Step was skipped. Data already exists."
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -126,11 +144,14 @@ class KaggleDownloader(Operator):
         force (bool): Indicates whether to force execution if current data exists.
     """
 
-    def __init__(self, name: str = None, params: dict = {}) -> None:
+    def __init__(self, name: str, params: dict = {}) -> None:
         super(KaggleDownloader, self).__init__(name=name, params=params)
+
         competition = self._params.get("competition", None)
         self._filename = self._params.get("filename", None)
         self._destination = self._params.get("destination", None)
+        self._filepath = os.path.join(self._destination, self._filename)
+
         self._command = (
             "kaggle competitions download" + " -p " + self._destination + " -c " + competition
         )
@@ -143,12 +164,13 @@ class KaggleDownloader(Operator):
             data: Not used
             context: not used.
         """
-        if self._force or not os.path.exists(os.path.join(self._destination, self._filename)):
-            try:
-                os.makedirs(self._destination, exist_ok=True)
-                subprocess.run(shlex.split(self._command), check=True, text=True, shell=False)
-            except subprocess.CalledProcessError as e:
-                logging.error(e.output)
+        if self._force or not os.path.exists(self._filepath):
+
+            os.makedirs(self._destination, exist_ok=True)
+            subprocess.run(shlex.split(self._command), check=True, text=True, shell=False)
+
+        else:
+            self._mark_skipped()
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -166,7 +188,7 @@ class ExtractZip(Operator):
 
     """
 
-    def __init__(self, name: str = None, params: dict = {}) -> None:
+    def __init__(self, name: str, params: dict = {}) -> None:
         super(ExtractZip, self).__init__(name=name, params=params)
         self._source = self._params.get("source", None)
         self._destination = self._params.get("destination", None)
@@ -179,16 +201,14 @@ class ExtractZip(Operator):
             data: Not used
             context: not used.
         """
-        print(
-            "Force is {}\t Directory {} contains {} files".format(
-                self._force, self._destination, str(len(os.listdir(self._destination)))
-            )
-        )
-        if self._force or not len(os.listdir(self._destination)) > 0:
-            os.makedirs(self._destination, exist_ok=True)
 
+        if self._force or not os.path.exists(self._destination):
+
+            os.makedirs(self._destination, exist_ok=True)
             with zipfile.ZipFile(self._source, "r") as zf:
                 zf.extractall(self._destination)
+        else:
+            self._mark_skipped()
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -203,7 +223,7 @@ class LoadCSV(Operator):
         encoding_errors (str): Pandas treatment of encoding errors. See pandas documentation.
     """
 
-    def __init__(self, name: str = None, params: dict = {}) -> None:
+    def __init__(self, name: str, params: dict = {}) -> None:
         super(LoadCSV, self).__init__(name=name, params=params)
 
         self._filepath = self._params.get("filepath", None)
@@ -220,17 +240,7 @@ class LoadCSV(Operator):
         Returns:
             DataFrame
         """
-
-        try:
-            return self._io.read(filepath=self._filepath, encoding_errors=self._encoding_errors)
-
-        except UnicodeError as e:
-            logging.error("Encoding error with {} error handling".format(self._encoding_errors))
-            raise (e)
-
-        except FileNotFoundError as e:
-            logging.error("File {} not found.".format(self._filepath))
-            raise (e)
+        return self._io.read(filepath=self._filepath, encoding_errors=self._encoding_errors)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -246,7 +256,7 @@ class SaveCSV(Operator):
             then force must be True, otherwise the step is not executed.
     """
 
-    def __init__(self, name: str = None, params: dict = {}) -> None:
+    def __init__(self, name: str, params: dict = {}) -> None:
         super(SaveCSV, self).__init__(name=name, params=params)
 
         self._filepath = self._params.get("filepath", None)
@@ -266,6 +276,9 @@ class SaveCSV(Operator):
             os.makedirs(os.path.dirname(self._filepath), exist_ok=True)
             self._io.write(data=data, filepath=self._filepath)
 
+        else:
+            self._mark_skipped()
+
 
 # ------------------------------------------------------------------------------------------------ #
 
@@ -278,7 +291,7 @@ class LoadParquet(Operator):
         filepath (str): The location of the parquet file.
     """
 
-    def __init__(self, name: str = None, params: dict = {}) -> None:
+    def __init__(self, name: str, params: dict = {}) -> None:
         super(LoadParquet, self).__init__(name=name, params=params)
         self._filepath = self._params.get("filepath", None)
         fileformat = os.path.splitext(self._filepath)[1].replace(".", "")
@@ -309,7 +322,7 @@ class SaveParquet(Operator):
             then force must be True, otherwise the step is not executed.
     """
 
-    def __init__(self, name: str = None, params: dict = {}) -> None:
+    def __init__(self, name: str, params: dict = {}) -> None:
         super(SaveParquet, self).__init__(name=name, params=params)
         self._filepath = self._params.get("filepath", None)
         self._force = self._params.get("force", False)
@@ -327,6 +340,8 @@ class SaveParquet(Operator):
         if self._force or not os.path.exists(self._filepath):
             os.makedirs(os.path.dirname(self._filepath), exist_ok=True)
             self._io.write(data=data, filepath=self._filepath)
+        else:
+            self._mark_skipped()
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -334,38 +349,7 @@ class SaveParquet(Operator):
 # ------------------------------------------------------------------------------------------------ #
 
 
-class Encoder(Operator):
-    """Encodes a DataFrame
-
-    Args:
-        name (str): The name for the step in the pipeline.
-        encoding (str): The encoding system, e.g. 'utf-9'
-    """
-
-    def __init__(self, name: str = None, params: dict = {}) -> None:
-        super(Encoder, self).__init__(name=name, params=params)
-        self._encoding = self._params.get("encoding", "utf-8")
-        self._column = self._params.get("column", None)
-
-    def execute(self, data: Any = None, context: dict = {}) -> pd.DataFrame:
-        """Loads data from a csv file into a DataFrame
-
-        Args:
-            data (DataFrame): Contains data to be encoded.
-            context: not used.
-
-        """
-        try:
-            data[self._column] = data[self._column].str.encode("utf-8", "strict")
-        except UnicodeEncodeError as e:
-            logging.error("Error encoding data")
-            raise (e)
-
-
-# ------------------------------------------------------------------------------------------------ #
-
-
-class SampleDataFrame(Operator):
+class DataFrameSample(Operator):
     """Samples a pandas DataFrame
 
     Args:
@@ -376,8 +360,8 @@ class SampleDataFrame(Operator):
         ignore_index (bool): If True, the original indexes will be reset.
     """
 
-    def __init__(self, name: str = None, params: dict = {}) -> None:
-        super(SampleDataFrame, self).__init__(name=name, params=params)
+    def __init__(self, name: str, params: dict = {}) -> None:
+        super(DataFrameSample, self).__init__(name=name, params=params)
 
         self._n = self._params.get("n", None)
         self._frac = self._params.get("frac", None)
@@ -393,8 +377,9 @@ class SampleDataFrame(Operator):
             context: not used.
 
         """
-        if self._frac > 1:
-            self._replace = True
+        if self._frac:
+            if self._frac > 1:
+                self._replace = True
 
         return data.sample(
             n=self._n,

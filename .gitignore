@@ -9,6 +9,15 @@ __pycache__/
 # Data
 testdata
 dwh
+*.pickle
+*.parquet
+*.csv
+
+# Lab
+lab.*
+
+# MLFlow
+mlruns
 
 # Shell Scripts
 shellscripts

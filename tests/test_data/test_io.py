@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday August 15th 2022 06:11:16 pm                                                 #
-# Modified   : Tuesday August 16th 2022 03:20:25 am                                                #
+# Modified   : Tuesday August 16th 2022 10:25:50 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -21,6 +21,7 @@ import inspect
 import pytest
 import logging
 import pandas as pd
+import shutil
 
 # Enter imports for modules and classes being tested here
 from atelier.data.io import IOFactory, CsvIO, YamlIO, PickleIO, ParquetIO
@@ -33,11 +34,16 @@ logger = logging.getLogger(__name__)
 
 @pytest.mark.io
 class TestCSVIO:
-    def test_io(self, caplog, dataframe):
+    def test_setup(self, test_data_folder):
+        output_filepath = os.path.join(test_data_folder, "test_io")
+        shutil.rmtree(output_filepath, ignore_errors=True)
+
+    def test_io(self, caplog, dataframe, test_data_folder):
         logger.info("\tStarted {} {}".format(self.__class__.__name__, inspect.stack()[0][3]))
 
         fileformat = "csv"
-        output_filepath = "tests/output/io/test.csv"
+        output_filepath = os.path.join(test_data_folder, "test_io", "test_csv", "test.csv")
+
         io = IOFactory.io(fileformat=fileformat)
         assert isinstance(io, CsvIO)
 
@@ -47,11 +53,11 @@ class TestCSVIO:
 
         logger.info("\tCompleted {} {}".format(self.__class__.__name__, inspect.stack()[0][3]))
 
-    def test_csv_params(self, caplog):
+    def test_csv_params(self, caplog, test_data_folder):
         logger.info("\tStarted {} {}".format(self.__class__.__name__, inspect.stack()[0][3]))
 
         fileformat = "csv"
-        output_filepath = "tests/output/io/test.csv"
+        output_filepath = os.path.join(test_data_folder, "test_io", "test_csv", "test.csv")
 
         sep = ","
         encoding_errors = "ignore"
@@ -79,11 +85,11 @@ class TestCSVIO:
 
 @pytest.mark.io
 class TestYamlIO:
-    def test_yml_io(self, caplog, dictionary):
+    def test_yml_io(self, caplog, dictionary, test_data_folder):
         logger.info("\tStarted {} {}".format(self.__class__.__name__, inspect.stack()[0][3]))
 
         fileformat = "yml"
-        output_filepath = "tests/output/io/test.yml"
+        output_filepath = os.path.join(test_data_folder, "test_io", "test_yml", "test.yml")
         io = IOFactory.io(fileformat=fileformat)
         assert isinstance(io, YamlIO)
 
@@ -98,11 +104,11 @@ class TestYamlIO:
 
 @pytest.mark.io
 class TestPickleIO:
-    def test_pickle_io(self, caplog, dictionary):
+    def test_pickle_io(self, caplog, dictionary, test_data_folder):
         logger.info("\tStarted {} {}".format(self.__class__.__name__, inspect.stack()[0][3]))
 
         fileformat = "pickle"
-        output_filepath = "tests/output/io/test.pickle"
+        output_filepath = os.path.join(test_data_folder, "test_io", "test_pickle", "test.pickle")
         io = IOFactory.io(fileformat=fileformat)
         assert isinstance(io, PickleIO)
 
@@ -117,12 +123,12 @@ class TestPickleIO:
 
 @pytest.mark.io
 class TestParquetIO:
-    def test_parquet(self, caplog, dataframe):
+    def test_parquet(self, caplog, dataframe, test_data_folder):
 
         logger.info("\tStarted {} {}".format(self.__class__.__name__, inspect.stack()[0][3]))
 
         fileformat = "parquet"
-        output_filepath = "tests/output/io/test.parquet"
+        output_filepath = os.path.join(test_data_folder, "test_io", "test_parquet", "test.parquet")
         io = IOFactory.io(fileformat=fileformat)
         assert isinstance(io, ParquetIO)
 

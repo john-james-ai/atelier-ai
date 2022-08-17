@@ -4,14 +4,14 @@
 # Project    : Atelier AI: Studio for AI Designers                                                 #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.4                                                                              #
-# Filename   : /io.py                                                                              #
+# Filename   : \io.py                                                                              #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday August 15th 2022 06:03:55 pm                                                 #
-# Modified   : Tuesday August 16th 2022 03:15:10 am                                                #
+# Modified   : Tuesday August 16th 2022 08:45:20 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -50,19 +50,25 @@ class CsvIO(IO):
     def read(self, filepath: str, **kwargs) -> Union[pd.DataFrame, dict]:
 
         sep = kwargs.get("sep", ",")
-        encoding_errors = kwargs.get("encoding_errors", "strict")
         header = kwargs.get("header", "infer")
+        index_col = kwargs.get("index_col", False)
         usecols = kwargs.get("usecols", None)
         nrows = kwargs.get("nrows", None)
+        encoding = kwargs.get("encoding", "utf-8")
+        encoding_errors = kwargs.get("encoding_errors", "strict")
+        low_memory = kwargs.get("low_memory", False)
         thousands = kwargs.get("thousands", ",")
 
         return pd.read_csv(
             filepath,
-            encoding_errors=encoding_errors,
             sep=sep,
             header=header,
+            index_col=index_col,
             usecols=usecols,
             nrows=nrows,
+            encoding=encoding,
+            encoding_errors=encoding_errors,
+            low_memory=low_memory,
             thousands=thousands,
         )
 
@@ -71,18 +77,20 @@ class CsvIO(IO):
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
         sep = kwargs.get("sep", ",")
-        header = kwargs.get("header", True)
         columns = kwargs.get("columns", None)
+        header = kwargs.get("header", True)
         index = kwargs.get("index", False)
+        index_label = kwargs.get("index_label", False)
         errors = kwargs.get("errors", "strict")
         encoding = kwargs.get("encoding", "utf-8")
 
         data.to_csv(
             filepath,
             sep=sep,
-            header=header,
             columns=columns,
+            header=header,
             index=index,
+            index_label=index_label,
             errors=errors,
             encoding=encoding,
         )

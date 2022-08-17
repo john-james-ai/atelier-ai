@@ -4,14 +4,14 @@
 # Project    : Atelier AI: Studio for AI Designers                                                 #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.4                                                                              #
-# Filename   : \pipeline.py                                                                        #
+# Filename   : /pipeline.py                                                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday August 11th 2022 09:43:52 pm                                               #
-# Modified   : Tuesday August 16th 2022 05:00:56 am                                                #
+# Modified   : Tuesday August 16th 2022 10:05:26 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -62,6 +62,10 @@ class Pipeline(ABC):
         return self._name
 
     @property
+    def steps(self) -> list:
+        return self._steps
+
+    @property
     def created(self) -> datetime:
         return self._created
 
@@ -77,64 +81,42 @@ class Pipeline(ABC):
     def duration(self) -> datetime:
         return self._duration
 
-    def add_step(self, step: Operator) -> None:
-        """Adds a operator step to the pipeline.
+    def set_steps(self, steps: []) -> None:
+        """Sets the steps on the Pipeline object.
 
         Args:
-            step (Operator): Operator object
+            steps (dict): List of pipeline steps
         """
-        self._steps.append(step)
-
-    def add_steps(self, steps: []) -> None:
-        """Adds a list of steps to the Pipeline.
-
-        Args:
-            steps (list): List of pipeline steps
-        """
-        self._steps.extend(steps)
-
-    def remove_step(self, name: str) -> None:
-        """Removes a step, referenced by name, from the pipeline
-
-        Args:
-            name (str): Name assigned to the operator object.
-        """
-        self._steps = [step for step in self._steps if step.name != name]
-
-    def get_step(self, name: str) -> None:
-        """Returns a Operator object by name."""
-        return [step for step in self._steps if step.name == name][0]
+        self._steps = steps
 
     def print_steps(self) -> None:
-        """Prints the step names in order in which they are added."""
-        seq = range(1, len(self._steps) + 1)
-        steps = {"Seq": seq, "Step": [step.name for step in self._steps]}
+        """Prints the steps in the order in which they were added."""
+        steps = {
+            "Seq": list(range(1, len(self._steps) + 1)),
+            "Step": [step.name for step in self._steps.values()],
+            "Created": [step.created for step in self._steps.values()],
+            "Started": [step.started for step in self._steps.values()],
+            "Stopped": [step.stopped for step in self._steps.values()],
+            "Duration": [step.duration for step in self._steps.values()],
+            "Force": [step.force for step in self._steps.values()],
+            "Status": [step.status for step in self._steps.values()],
+        }
         df = pd.DataFrame(steps)
         print(df)
 
-    def run(self, start_step: int = 0, stop_step: float = float("inf")) -> None:
-        """Runs the pipeline
-
-        Args:
-            start_step (int): First step to execute in the run sequence.
-            stop_step (int): Last step to execute in the run sequence.
-        """
+    def run(self) -> None:
+        """Runs the pipeline"""
         self._setup()
-        self._execute(start_step=start_step, stop_step=stop_step, context=self._context)
+        self._execute(context=self._context)
         self._teardown()
 
     @abstractmethod
-    def _execute(
-        self, start_step: int = 0, stop_step: float = float("inf"), context: dict = {}
-    ) -> None:
+    def _execute(self, context: dict = {}) -> None:
         """Iterates through the sequence of steps.
 
         Args:
-            start_step (int): First step to execute in the run sequence.
-            stop_step (int): Last step to execute in the run sequence.
             context (dict): Dictionary of parameters shared across steps.
         """
-        pass
 
     def _setup(self) -> None:
         """Executes setup for pipeline."""
@@ -149,6 +131,9 @@ class Pipeline(ABC):
         self._stopped = datetime.now()
         self._duration = round((self._stopped - self._started).total_seconds(), 4)
 
+    def _update_step(self, step: Operator) -> None:
+        self._steps[step.name] = step
+
 
 # ------------------------------------------------------------------------------------------------ #
 
@@ -157,22 +142,23 @@ class DataPipe(Pipeline):
     def __init__(self, name: str, context: dict = {}) -> None:
         super(DataPipe, self).__init__(name=name, context=context)
 
-    def _execute(
-        self, start_step: int = 0, stop_step: float = float("inf"), context: dict = {}
-    ) -> None:
+    def __str__(self) -> str:
+        return f"DataPipe {self._name}"
+
+    def __repr__(self):
+        return f"DataPipe(name={self._name})"
+
+    def _execute(self, context: dict = {}) -> None:
         """Iterates through the sequence of steps.
 
         Args:
-            start_step (int): First step to execute in the run sequence.
-            stop_step (int): Last step to execute in the run sequence.
             context (dict): Dictionary of parameters shared across steps.
         """
-
         data = None
-        for seq, task in enumerate(self._steps, 1):
-            if seq >= start_step and seq <= stop_step:
-                result = task.run(data=data, context=context)
-                data = result if result is not None else data
+        for step in self._steps.values():
+            result = step.run(data=data, context=context)
+            data = result if result is not None else data
+            self._update_step(step=step)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -180,10 +166,6 @@ class DataPipe(Pipeline):
 
 class PipelineBuilder(ABC):
     """Constructs Configuration file based Pipeline objects"""
-
-    def __init__(self) -> None:
-        self._config_filepath = None
-        self.reset()
 
     def reset(self) -> None:
         self._pipeline = None
@@ -201,7 +183,7 @@ class PipelineBuilder(ABC):
         config = self._get_config(config_filepath)
         pipeline = self.build_pipeline(config)
         steps = self._build_steps(config.get("steps", None))
-        pipeline.add_steps(steps)
+        pipeline.set_steps(steps)
         self._pipeline = pipeline
 
     def _get_config(self, config_filepath: str) -> dict:
@@ -211,12 +193,12 @@ class PipelineBuilder(ABC):
 
     @abstractmethod
     def build_pipeline(self, config: dict) -> Pipeline:
-        pass
+        """Delegated to subclasses."""
 
     def _build_steps(self, config: dict) -> list:
         """Iterates through task and returns a list of task objects."""
 
-        steps = []
+        steps = {}
 
         for _, step_config in config.items():
 
@@ -231,7 +213,7 @@ class PipelineBuilder(ABC):
                     params=step_config["params"],
                 )
 
-                steps.append(operator)
+                steps[operator.name] = operator
 
             except KeyError as e:
                 logging.error("Configuration File is missing operator configuration data")
@@ -242,5 +224,17 @@ class PipelineBuilder(ABC):
 
 # ------------------------------------------------------------------------------------------------ #
 class DataPipeBuilder(PipelineBuilder):
+    """Constructs a data processing pipeline."""
+
+    def __init__(self) -> None:
+        self._config_filepath = None
+        self.reset()
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}"
+
     def build_pipeline(self, config: dict) -> DataPipe:
         return DataPipe(name=config.get("name"))

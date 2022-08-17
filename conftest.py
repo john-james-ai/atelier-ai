@@ -4,14 +4,14 @@
 # Project    : Atelier AI: Studio for AI Designers                                                 #
 # Version    : 0.1.0                                                                               #
 # Python     : 3.10.4                                                                              #
-# Filename   : \conftest.py                                                                        #
+# Filename   : /conftest.py                                                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 16th 2022 12:58:20 am                                                #
-# Modified   : Tuesday August 16th 2022 06:00:29 am                                                #
+# Modified   : Tuesday August 16th 2022 10:13:39 pm                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -19,6 +19,7 @@
 """Includes fixtures, classes and functions supporting testing."""
 import pytest
 import pandas as pd
+from atelier.workflow.pipeline import DataPipeBuilder
 
 # ------------------------------------------------------------------------------------------------ #
 TEST_DATAFRAME_FILEPATH = "tests/testdata/testfile.csv"
@@ -43,11 +44,23 @@ def dictionary():
     return d
 
 
-def pytest_collection_modifyitems(items):
-    for item in items:
-        if "io" in item.nodeid:
-            item.add_marker(pytest.mark.io)
-        elif "datasource" in item.nodeid:
-            item.add_marker(pytest.mark.datasource)
-        elif "etl" in item.nodeid:
-            item.add_marker(pytest.mark.etl)
+@pytest.fixture(scope="module")
+def test_data_folder():
+    return "tests/testdata"
+
+
+@pytest.fixture(scope="module")
+def datapipe():
+    config_filepath = "config/etl.yml"
+    builder = DataPipeBuilder()
+    builder.build(config_filepath=config_filepath)
+    datapipe = builder.pipeline
+    return datapipe
+
+
+@pytest.fixture(scope="module")
+def datapipe_builder():
+    config_filepath = "config/etl.yml"
+    builder = DataPipeBuilder()
+    builder.build(config_filepath=config_filepath)
+    return builder
