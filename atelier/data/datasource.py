@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
-# Project    : Atelier - Workspace for Sculpting and Curating Data Science                         #
-# Version    : 0.1.0                                                                               #
+# Project    : Atelier AI: Studio for AI Designers                                                 #
+# Version    : 0.1.1                                                                               #
 # Python     : 3.10.4                                                                              #
 # Filename   : /datasource.py                                                                      #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/atelier                                            #
+# URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday August 15th 2022 11:10:14 am                                                 #
-# Modified   : Monday August 15th 2022 06:45:05 pm                                                 #
+# Modified   : Wednesday August 17th 2022 12:09:40 am                                              #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #

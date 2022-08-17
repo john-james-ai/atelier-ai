@@ -10,7 +10,7 @@
         ["projectCreationYear", "2022"],
         ["url", "https://github.com/john-james-ai/atelier-ai"],
         ["projectname", "Atelier AI: Studio for AI Designers"],
-        ["version", "0.1.0"],
+        ["version", "0.1.1"],
         ["pythonversion","3.10.4"]
     ],
     }

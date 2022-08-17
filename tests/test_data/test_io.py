@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
 # Project    : Atelier AI: Studio for AI Designers                                                 #
-# Version    : 0.1.0                                                                               #
+# Version    : 0.1.1                                                                               #
 # Python     : 3.10.4                                                                              #
 # Filename   : /test_io.py                                                                         #
 # ------------------------------------------------------------------------------------------------ #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday August 15th 2022 06:11:16 pm                                                 #
-# Modified   : Tuesday August 16th 2022 10:25:50 pm                                                #
+# Modified   : Wednesday August 17th 2022 12:09:41 am                                              #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
