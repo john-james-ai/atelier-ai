@@ -3,9 +3,9 @@
 [![PyPI](https://img.shields.io/pypi/v/atelier-ai?style=flat-square)](https://pypi.python.org/pypi/atelier-ai/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/atelier-ai?style=flat-square)](https://pypi.python.org/pypi/atelier-ai/)
 [![PyPI - License](https://img.shields.io/pypi/l/atelier-ai?style=flat-square)](https://pypi.python.org/pypi/atelier-ai/)
-[![Coookiecutter - Wolt](https://img.shields.io/badge/cookiecutter-Wolt-00c2e8?style=flat-square&logo=cookiecutter&logoColor=D4AA00&link=https://github.com/woltapp/wolt-python-package-cookiecutter)](https://github.com/woltapp/wolt-python-package-cookiecutter)
-
-
+[![PyPI - Coverage](coverage.svg)](https://pypi.python.org/pypi/atelier-ai/)
+[![PyPI - Implementation](https://img.shields.io/pypi/implementation/atelier-ai)](https://pypi.python.org/pypi/atelier-ai/)
+[![PyPI - Maintainability](https://img.shields.io/codeclimate/maintainability-percentage/john-james-ai/atelier-ai)](https://pypi.python.org/pypi/atelier-ai/)
 ---
 
 **Documentation**: [https://john-james-ai.github.io/atelier-ai](https://john-james-ai.github.io/atelier-ai)
@@ -87,6 +87,3 @@ Or if you want e.g. want to run all checks manually for all files:
 pre-commit run --all-files
 ```
 
----
-
-This project was generated using the [wolt-python-package-cookiecutter](https://github.com/woltapp/wolt-python-package-cookiecutter) template.
