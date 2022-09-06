@@ -2,16 +2,16 @@
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
 # Project    : Atelier AI: Studio for AI Designers                                                 #
-# Version    : 0.1.1                                                                               #
+# Version    : 0.1.2                                                                               #
 # Python     : 3.10.4                                                                              #
-# Filename   : /conftest.py                                                                        #
+# Filename   : \conftest.py                                                                        #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 16th 2022 12:58:20 am                                                #
-# Modified   : Wednesday August 17th 2022 12:09:40 am                                              #
+# Modified   : Tuesday September 6th 2022 02:34:12 pm                                              #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #

@@ -2,16 +2,16 @@
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
 # Project    : Atelier AI: Studio for AI Designers                                                 #
-# Version    : 0.1.1                                                                               #
+# Version    : 0.1.2                                                                               #
 # Python     : 3.10.4                                                                              #
-# Filename   : /operators.py                                                                       #
+# Filename   : \operators.py                                                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday August 11th 2022 09:43:52 pm                                               #
-# Modified   : Wednesday August 17th 2022 12:09:41 am                                              #
+# Modified   : Tuesday September 6th 2022 02:34:13 pm                                              #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #

@@ -1,6 +1,6 @@
 # Atelier AI
 
-[![PyPI](https://img.shields.io/pypi/v/atelier-ai?style=flat-square)](https://pypi.python.org/pypi/atelier-ai/)
+[![PyPI](https://img.shields.io/pypi/v/atelier-ai?color=blue)](https://pypi.python.org/pypi/atelier-ai/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/atelier-ai?style=flat-square)](https://pypi.python.org/pypi/atelier-ai/)
 [![PyPI - License](https://img.shields.io/pypi/l/atelier-ai?style=flat-square)](https://pypi.python.org/pypi/atelier-ai/)
 [![PyPI - Coverage](coverage.svg)](https://pypi.python.org/pypi/atelier-ai/)
