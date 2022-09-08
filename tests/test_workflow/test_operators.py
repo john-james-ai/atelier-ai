@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
 # Project    : Atelier AI: Studio for AI Designers                                                 #
-# Version    : 0.1.2                                                                               #
+# Version    : 0.1.3                                                                               #
 # Python     : 3.10.4                                                                              #
 # Filename   : \test_operators.py                                                                  #
 # ------------------------------------------------------------------------------------------------ #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 16th 2022 01:36:17 pm                                                #
-# Modified   : Tuesday September 6th 2022 02:34:13 pm                                              #
+# Modified   : Thursday September 8th 2022 12:40:55 pm                                             #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #

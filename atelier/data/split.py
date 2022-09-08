@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
 # Project    : Atelier AI: Studio for AI Designers                                                 #
-# Version    : 0.1.2                                                                               #
+# Version    : 0.1.3                                                                               #
 # Python     : 3.10.4                                                                              #
 # Filename   : \split.py                                                                           #
 # ------------------------------------------------------------------------------------------------ #
@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Wednesday September 7th 2022 08:18:20 am                                            #
-# Modified   : Wednesday September 7th 2022 10:41:58 am                                            #
+# Modified   : Thursday September 8th 2022 12:40:54 pm                                             #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2022 John James                                                                 #
