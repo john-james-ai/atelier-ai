@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "atelier-ai"
-version = "0.1.6"
+version = "0.1.7"
 description = "Atelier AI: Studio for AI Designers"
 authors = [
     "John James <john.james.ai.studio@gmail.com>",
@@ -48,6 +48,7 @@ mkdocs-material = "*"
 mypy = "*"
 pep8-naming = "*"
 pre-commit = "*"
+pyarrow = "*"
 pymdown-extensions = "*"
 pytest = "*"
 pytest-github-actions-annotate-failures = "*"
