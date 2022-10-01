@@ -11,15 +11,20 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Tuesday August 16th 2022 12:58:20 am                                                #
-# Modified   : Thursday September 8th 2022 01:04:55 pm                                             #
+# Modified   : Tuesday September 13th 2022 03:13:05 pm                                             #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
 # ================================================================================================ #
 """Includes fixtures, classes and functions supporting testing."""
+import sys
 import pytest
 import pandas as pd
-from atelier.workflow.pipeline import DataPipeBuilder
+
+# This is needed so Python can find test_tools on the path.
+sys.path.append("../..")
+from test_tools.fixtures.common import *  # noqa E402
+from atelier.workflow.pipeline import DataPipeBuilder  # noqa E402
 
 # ------------------------------------------------------------------------------------------------ #
 TEST_DATAFRAME_FILEPATH = "tests/testdata/testfile.csv"
@@ -51,7 +56,7 @@ def test_data_folder():
 
 @pytest.fixture(scope="module")
 def datapipe():
-    config_filepath = "config/etl.yml"
+    config_filepath = "tests/testdata/config/pipe.yml"
     builder = DataPipeBuilder()
     builder.build(config_filepath=config_filepath)
     datapipe = builder.pipeline
@@ -60,7 +65,7 @@ def datapipe():
 
 @pytest.fixture(scope="module")
 def datapipe_builder():
-    config_filepath = "config/etl.yml"
+    config_filepath = "tests/testdata/config/pipe.yml"
     builder = DataPipeBuilder()
     builder.build(config_filepath=config_filepath)
     return builder
