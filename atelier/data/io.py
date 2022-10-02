@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Monday August 15th 2022 06:03:55 pm                                                 #
-# Modified   : Thursday September 8th 2022 01:04:55 pm                                             #
+# Modified   : Sunday October 2nd 2022 02:45:05 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -19,8 +19,9 @@
 from abc import ABC, abstractmethod
 import os
 import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
+
+# import pyarrow as pa
+# import pyarrow.parquet as pq
 import pickle
 import logging
 
@@ -132,39 +133,39 @@ class PickleIO(IO):
 # ------------------------------------------------------------------------------------------------ #
 
 
-class ParquetIO(IO):
-    """Reads, and writes Spark DataFrames to / from Parquet storage format.."""
+# class ParquetIO(IO):
+#     """Reads, and writes Spark DataFrames to / from Parquet storage format.."""
 
-    def read(self, filepath: str, **kwargs) -> pd.DataFrame:
-        """Reads a Spark DataFrame from Parquet file resource
-        Args:
-            filepath (str): The path to the parquet file resource
-            kwargs:
-                column (list): columns to read from the file
-        Returns:
-            pd.DataFrame
-        """
-        columns = kwargs.get("columns", None)
+#     def read(self, filepath: str, **kwargs) -> pd.DataFrame:
+#         """Reads a Spark DataFrame from Parquet file resource
+#         Args:
+#             filepath (str): The path to the parquet file resource
+#             kwargs:
+#                 column (list): columns to read from the file
+#         Returns:
+#             pd.DataFrame
+#         """
+#         columns = kwargs.get("columns", None)
 
-        try:
-            table = pq.read_table(source=filepath, columns=columns)
-            return table.to_pandas()
+#         try:
+#             table = pq.read_table(source=filepath, columns=columns)
+#             return table.to_pandas()
 
-        except FileNotFoundError as e:
-            logging.error("File {} was not found.".format(filepath))
-            raise e
+#         except FileNotFoundError as e:
+#             logging.error("File {} was not found.".format(filepath))
+#             raise e
 
-    def write(self, data: pd.DataFrame, filepath: str, **kwargs) -> None:
-        """Writes Spark DataFrame to Parquet file resource
-        Args:
-            data (pyspark.sql.DataFrame): Spark DataFrame to write
-            filepath (str): The path to the parquet file to be written
+#     def write(self, data: pd.DataFrame, filepath: str, **kwargs) -> None:
+#         """Writes Spark DataFrame to Parquet file resource
+#         Args:
+#             data (pyspark.sql.DataFrame): Spark DataFrame to write
+#             filepath (str): The path to the parquet file to be written
 
-        """
+#         """
 
-        os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        table = pa.Table.from_pandas(data)
-        pq.write_table(table, filepath)
+#         os.makedirs(os.path.dirname(filepath), exist_ok=True)
+#         table = pa.Table.from_pandas(data)
+#         pq.write_table(table, filepath)
 
 
 # ------------------------------------------------------------------------------------------------ #
@@ -179,7 +180,7 @@ class IOFactory:
         "yaml": YamlIO(),
         "pickle": PickleIO(),
         "pkl": PickleIO(),
-        "parquet": ParquetIO(),
+        # "parquet": ParquetIO(),
     }
 
     @staticmethod
