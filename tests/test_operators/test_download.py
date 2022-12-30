@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday December 29th 2022 09:31:49 pm                                             #
-# Modified   : Friday December 30th 2022 08:04:39 am                                               #
+# Modified   : Friday December 30th 2022 08:59:59 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -22,7 +22,7 @@ from datetime import datetime
 import pytest
 import logging
 
-from atelier.operator.download import Downloader, DownloadExtractorZip, DownloadExtractorTarGZ
+from atelier.operator.download import Downloader
 
 # ------------------------------------------------------------------------------------------------ #
 logger = logging.getLogger(__name__)
@@ -70,7 +70,7 @@ class TestDownloader:  # pragma: no cover
         )
 
 
-@pytest.mark.download_zip
+@pytest.mark.download
 class TestDownloadZip:  # pragma: no cover
     # ============================================================================================ #
     def test_download_zip(self, caplog):
@@ -84,7 +84,7 @@ class TestDownloadZip:  # pragma: no cover
             )
         )
         # ---------------------------------------------------------------------------------------- #
-        d = DownloadExtractorZip(url=ZIP_FILE, destination=DESTINATION_2)
+        d = Downloader(url=ZIP_FILE, destination=DESTINATION_2)
         d.execute()
         assert len(os.listdir(DESTINATION_2)) > 0
         # ---------------------------------------------------------------------------------------- #
@@ -102,7 +102,7 @@ class TestDownloadZip:  # pragma: no cover
         )
 
 
-@pytest.mark.download_targz
+@pytest.mark.download
 class TestDownloadTarGZ:  # pragma: no cover
     # ============================================================================================ #
     def test_download_targz(self, caplog):
@@ -116,7 +116,7 @@ class TestDownloadTarGZ:  # pragma: no cover
             )
         )
         # ---------------------------------------------------------------------------------------- #
-        d = DownloadExtractorTarGZ(url=GZ_FILE, destination=DESTINATION_3)
+        d = Downloader(url=GZ_FILE, destination=DESTINATION_3)
         d.execute()
         assert len(os.listdir(DESTINATION_3)) > 0
         # ---------------------------------------------------------------------------------------- #

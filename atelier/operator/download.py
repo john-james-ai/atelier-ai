@@ -11,12 +11,13 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday December 29th 2022 09:20:10 pm                                             #
-# Modified   : Friday December 30th 2022 08:00:58 am                                               #
+# Modified   : Friday December 30th 2022 09:06:57 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2022 John James                                                                 #
 # ================================================================================================ #
 """Download Module"""
+from abc import abstractmethod
 import os
 import urllib
 import tarfile
@@ -26,10 +27,25 @@ from .base import Operator
 
 
 # ------------------------------------------------------------------------------------------------ #
-#                                        DOWNLOADER                                                #
+#                                      DOWNLOADER ABC                                              #
 # ------------------------------------------------------------------------------------------------ #
-class Downloader(Operator):
-    """Downloads a file from a website. Also base class for DownloadExtractors.
+class DownloaderABC(Operator):
+
+    def __init__(self, url: str, destination: str) -> None:
+        super().__init__()
+        self._url = url
+        self._destination = destination
+
+    @abstractmethod
+    def execute(self) -> None:
+        """Downloads the data to the destination directory."""
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                      DOWNLOADERFILE                                              #
+# ------------------------------------------------------------------------------------------------ #
+class DownloaderFile(DownloaderABC):
+    """Downloads an uncompressed file from a website.
     Args:
         url (str): The URL to the web resource
         destination (str): A directory into which the source file will be stored. The destination
@@ -37,9 +53,7 @@ class Downloader(Operator):
     """
 
     def __init__(self, url: str, destination: str) -> None:
-        super().__init__()
-        self._url = url
-        self._destination = destination
+        super().__init__(url=url, destination=destination)
 
     def execute(self) -> None:
         """Downloads a file from a remote source."""
@@ -56,7 +70,7 @@ class Downloader(Operator):
 # ------------------------------------------------------------------------------------------------ #
 #                                  DOWNLOAD EXTRACTOR ZIP                                          #
 # ------------------------------------------------------------------------------------------------ #
-class DownloadExtractorZip(Downloader):
+class DownloadExtractorZip(DownloaderABC):
     """Downloads a ZipFile from a website and extracts the contents a destination directory.
     Args:
         url (str): The URL to the web resource
@@ -88,7 +102,7 @@ class DownloadExtractorZip(Downloader):
 # ------------------------------------------------------------------------------------------------ #
 #                                DOWNLOAD EXTRACTOR TAR GZ                                         #
 # ------------------------------------------------------------------------------------------------ #
-class DownloadExtractorTarGZ(Downloader):
+class DownloadExtractorTarGZ(DownloaderABC):
     """Downloads a Tar GZ from a website and extracts the contents a destination directory.
     Args:
         url (str): The URL to the web resource
@@ -106,3 +120,30 @@ class DownloadExtractorTarGZ(Downloader):
         targz_file = tarfile.open(fileobj=ftpstream, mode="r|gz")
         # Extract its contents into <extraction_path>
         targz_file.extractall(path=self._destination)
+
+
+# ------------------------------------------------------------------------------------------------ #
+#                                    DOWNLOADER                                                    #
+# ------------------------------------------------------------------------------------------------ #
+class Downloader(DownloaderABC):
+    """Downloads data from a web source, given a url and a destination directory.
+    Args:
+        url (str): The URL to the web resource
+        destination (str): A directory into which the ZipFile contents will be extracted.
+    """
+    def __init__(self, url: str, destination: str) -> None:
+        super().__init__(url=url, destination=destination)
+
+    def execute(self) -> None:
+        """Downloads and decompresses the data if necessary."""
+        downloader = self._get_downloader()
+        d = downloader(url=self._url, destination=self._destination)
+        d.execute()
+
+    def _get_downloader(self) -> DownloaderABC:
+        downloaders = {'.zip': DownloadExtractorZip, '.gz': DownloadExtractorTarGZ}
+        format = os.path.splitext(self._url)[1]
+        try:
+            return downloaders[format]
+        except KeyError:
+            return DownloaderFile
