@@ -1,13 +1,5 @@
 # Atelier AI
 
-[![PyPI](https://img.shields.io/pypi/v/atelier-ai?color=blue)](https://pypi.python.org/pypi/atelier-ai/)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/atelier-ai?style=flat-square)](https://pypi.python.org/pypi/atelier-ai/)
-[![PyPI - License](https://img.shields.io/pypi/l/atelier-ai?style=flat-square)](https://pypi.python.org/pypi/atelier-ai/)
-[![PyPI - Coverage](coverage.svg)](https://pypi.python.org/pypi/atelier-ai/)
-[![PyPI - Implementation](https://img.shields.io/pypi/implementation/atelier-ai)](https://pypi.python.org/pypi/atelier-ai/)
-[![PyPI - Maintainability](https://img.shields.io/codeclimate/maintainability-percentage/john-james-ai/atelier-ai)](https://pypi.python.org/pypi/atelier-ai/)
----
-
 **Documentation**: [https://john-james-ai.github.io/atelier-ai](https://john-james-ai.github.io/atelier-ai)
 
 **Source Code**: [https://github.com/john-james-ai/atelier-ai](https://github.com/john-james-ai/atelier-ai)
@@ -86,4 +78,3 @@ Or if you want e.g. want to run all checks manually for all files:
 ```sh
 pre-commit run --all-files
 ```
-
