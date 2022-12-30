@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday December 29th 2022 09:31:49 pm                                             #
-# Modified   : Thursday December 29th 2022 09:50:25 pm                                             #
+# Modified   : Friday December 30th 2022 08:04:39 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -31,9 +31,9 @@ TEXT_FILE = "https://vision.cs.utexas.edu/projects/finegrained/utzap50k/readme.t
 ZIP_FILE = "https://vision.cs.utexas.edu/projects/finegrained/utzap50k/ut-zap50k-data.zip"
 GZ_FILE = "http://www.sbeams.org/sample_data/Microarray/External_test_data.tar.gz"
 
-DESTINATION_1 = "tests/data/test_operators/test_download/read.txt"
-DESTINATION_2 = "tests/data/test_operators/test_download/zipfile/"
-DESTINATION_3 = "tests/data/test_operators/test_download/targz/"
+DESTINATION_1 = "tests/test_data/output/test_operators/test_download/"
+DESTINATION_2 = "tests/test_data/output/test_operators/test_download/zipfile/"
+DESTINATION_3 = "tests/test_data/output/test_operators/test_download/targz/"
 
 
 @pytest.mark.download
@@ -51,9 +51,10 @@ class TestDownloader:  # pragma: no cover
         )
         # ---------------------------------------------------------------------------------------- #
         os.makedirs(os.path.dirname(DESTINATION_1), exist_ok=True)
+
         d = Downloader(TEXT_FILE, DESTINATION_1)
         d.execute()
-        assert os.path.exists(DESTINATION_1)
+        assert len(os.listdir(DESTINATION_1)) > 0
         # ---------------------------------------------------------------------------------------- #
         end = datetime.now()
         duration = round((end - start).total_seconds(), 1)

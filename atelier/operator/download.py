@@ -11,12 +11,13 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday December 29th 2022 09:20:10 pm                                             #
-# Modified   : Thursday December 29th 2022 09:31:26 pm                                             #
+# Modified   : Friday December 30th 2022 08:00:58 am                                               #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2022 John James                                                                 #
 # ================================================================================================ #
 """Download Module"""
+import os
 import urllib
 import tarfile
 from zipfile import ZipFile
@@ -31,7 +32,8 @@ class Downloader(Operator):
     """Downloads a file from a website. Also base class for DownloadExtractors.
     Args:
         url (str): The URL to the web resource
-        destination (str): A path of the downloaded file.
+        destination (str): A directory into which the source file will be stored. The destination
+            file will have the same name as the source file.
     """
 
     def __init__(self, url: str, destination: str) -> None:
@@ -42,7 +44,9 @@ class Downloader(Operator):
     def execute(self) -> None:
         """Downloads a file from a remote source."""
         try:
-            _ = urllib.request.urlretrieve(url=self._url, filename=self._destination)
+            filename = os.path.basename(self._url)
+            destination = os.path.join(self._destination, filename)
+            _ = urllib.request.urlretrieve(url=self._url, filename=destination)
         except IsADirectoryError:
             msg = "The destination parameter is a directory. For download, this must be a path to a file."
             self._logger.error(msg)

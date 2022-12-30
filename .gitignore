@@ -8,6 +8,7 @@ __pycache__/
 
 # Data
 testdata
+test_data
 dwh
 *.pickle
 *.parquet
