@@ -4,14 +4,14 @@
 # Project    : Atelier AI: Studio for AI Designers                                                 #
 # Version    : 0.1.4                                                                               #
 # Python     : 3.10.4                                                                              #
-# Filename   : /logging.py                                                                         #
+# Filename   : /atelier/utils/logging.py                                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Sunday November 13th 2022 12:05:36 pm                                               #
-# Modified   : Sunday November 13th 2022 03:16:52 pm                                               #
+# Modified   : Monday January 30th 2023 06:04:38 am                                                #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -25,6 +25,29 @@ from datetimes import Timer
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------------ #
+
+
+def log_start(module: str, classname: str, timer: Timer):
+
+    date = timer.started.strftime("%m/%d/%Y")
+    time = timer.stopped.strftime("%H:%M:%S")
+
+    msg = "Started {} at {} on {}".format(classname, time, date)
+    logger = logging.getLogger(module)
+
+    logger.info(msg)
+
+
+def log_end(module: str, classname: str, timer: Timer):
+
+    date = timer.stopped.strftime("%m/%d/%Y")
+    time = timer.stopped.strftime("%H:%M:%S")
+    duration = timer.duration.as_string()
+
+    msg = "Completed {} at {} on {}. Duration: {}.".format(classname, time, date, duration)
+    logger = logging.getLogger(module)
+
+    logger.info(msg)
 
 
 def operator(func):
@@ -48,24 +71,3 @@ def operator(func):
             raise e
 
     return wrapper
-
-    def log_start(module: str, classname: str, timer: Timer):
-
-        date = timer.started.strftime("%m/%d/%Y")
-        time = timer.stopped.strftime("%H:%M:%S")
-
-        msg = "Started {} at {} on {}".format(classname, time, date)
-        logger = logging.getLogger(module)
-
-        logger.info(msg)
-
-    def log_end(module: str, classname: str, timer: Timer):
-
-        date = timer.stopped.strftime("%m/%d/%Y")
-        time = timer.stopped.strftime("%H:%M:%S")
-        duration = timer.duration.as_string()
-
-        msg = "Completed {} at {} on {}. Duration: {}.".format(classname, time, date, duration)
-        logger = logging.getLogger(module)
-
-        logger.info(msg)
