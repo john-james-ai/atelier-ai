@@ -11,7 +11,7 @@
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Friday March 3rd 2023 04:53:14 am                                                   #
-# Modified   : Friday March 3rd 2023 05:09:17 am                                                   #
+# Modified   : Friday March 3rd 2023 05:25:33 am                                                   #
 # ------------------------------------------------------------------------------------------------ #
 # License    : MIT License                                                                         #
 # Copyright  : (c) 2023 John James                                                                 #
@@ -19,50 +19,12 @@
 import numpy as np
 
 
-def cartesian(array, out=None):
-    """
-    Generate a cartesian product of input arrays.
-    Parameters
-    ----------
-    arrays:  1-D array from which the cartesian product
-    out : ndarray
-        Array to place the cartesian product in.
-    Returns
-    -------
-    out : ndarray
-        2-D array of shape (M, len(arrays)) containing cartesian products
-        formed of input arrays.
-    Examples
-    --------
-    >>> cartesian(([1, 2, 3], [4, 5], [6, 7]))
-    array([[1, 4, 6],
-           [1, 4, 7],
-           [1, 5, 6],
-           [1, 5, 7],
-           [2, 4, 6],
-           [2, 4, 7],
-           [2, 5, 6],
-           [2, 5, 7],
-           [3, 4, 6],
-           [3, 4, 7],
-           [3, 5, 6],
-           [3, 5, 7]])
+def cartesian_product(*arrays):
+    # Source: https://stackoverflow.com/questions/11144513/cartesian-product-of-x-and-y-array-points-into-single-array-of-2d-points/49445693#49445693
+    ndim = len(arrays)
+    return np.stack(np.meshgrid(*arrays), axis=-1).reshape(-1, ndim)
 
-    Source: https://stackoverflow.com/questions/1208118/using-numpy-to-build-an-array-of-all-combinations-of-two-arrays/1235363#1235363
-    """
 
-    arrays = [array, array]
-    arrays = [np.asarray(x) for x in arrays]
-    dtype = arrays[0].dtype
-
-    n = np.prod([x.size for x in arrays])
-    if out is None:
-        out = np.zeros([n, len(arrays)], dtype=dtype)
-
-    m = int(n / arrays[0].size)
-    out[:, 0] = np.repeat(arrays[0], m)
-    if arrays[1:]:
-        cartesian(arrays[1:], out=out[0:m, 1:])
-        for j in range(1, arrays[0].size):
-            out[j * m : (j + 1) * m, 1:] = out[0:m, 1:]  # noqa E203
-    return out
+# a = np.array([1,2])
+# b = np.array([10,20])
+# cartesian_product(a,b)
