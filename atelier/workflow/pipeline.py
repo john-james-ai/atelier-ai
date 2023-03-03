@@ -4,14 +4,14 @@
 # Project    : Atelier AI: Studio for AI Designers                                                 #
 # Version    : 0.1.4                                                                               #
 # Python     : 3.10.4                                                                              #
-# Filename   : /pipeline.py                                                                        #
+# Filename   : /atelier/workflow/pipeline.py                                                       #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday August 11th 2022 09:43:52 pm                                               #
-# Modified   : Thursday September 8th 2022 01:04:55 pm                                             #
+# Modified   : Thursday March 2nd 2023 05:10:24 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -27,6 +27,7 @@ import logging
 
 from atelier.data.io import IOFactory
 from atelier.workflow.operators import Operator
+from atelier.persistence.repo import Repo
 
 # ------------------------------------------------------------------------------------------------ #
 logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -41,53 +42,17 @@ class Pipeline(ABC):
         context (dict): Data required by all operators in the pipeline. Optional.
     """
 
-    def __init__(self, name: str, context: dict = {}) -> None:
+    def __init__(self, name: str, repo: Repo = None) -> None:
         self._name = name
-        self._context = context
-        self._steps = []
-        self._active_run = None
-        self._run_id = None
-
-        self._created = datetime.now()
-        self._started = None
-        self._stopped = None
-        self._duration = None
-
-    @property
-    def run_id(self) -> str:
-        return self._run_id
+        self._repo = repo
+        self._tasks = {}
 
     @property
     def name(self) -> str:
         return self._name
 
-    @property
-    def steps(self) -> list:
-        return self._steps
-
-    @property
-    def created(self) -> datetime:
-        return self._created
-
-    @property
-    def started(self) -> datetime:
-        return self._started
-
-    @property
-    def stopped(self) -> datetime:
-        return self._stopped
-
-    @property
-    def duration(self) -> datetime:
-        return self._duration
-
-    def set_steps(self, steps: []) -> None:
-        """Sets the steps on the Pipeline object.
-
-        Args:
-            steps (dict): List of pipeline steps
-        """
-        self._steps = steps
+    def add_task(self, task: Task) -> None:
+        self._tasks[task.name] = task
 
     def print_steps(self) -> None:
         """Prints the steps in the order in which they were added."""
