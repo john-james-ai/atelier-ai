@@ -7,11 +7,16 @@
     "settings": {
     "psi-header.variables": [
 
-        ["projectCreationYear", "2022"],
+        ["projectCreationYear", "2023"],
         ["url", "https://github.com/john-james-ai/atelier-ai"],
         ["projectname", "Atelier AI: Studio for AI Designers"],
-        ["version", "0.1.4"],
-        ["pythonversion","3.10.4"]
+        ["version", "0.1.19"],
+        ["pythonversion","3.10.10"]
     ],
+    "psi-header.config": {
+
+
+
+    },
     }
 }

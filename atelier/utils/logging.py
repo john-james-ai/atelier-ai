@@ -1,21 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding:utf-8 -*-
-# ================================================================================================ #
-# Project    : Atelier AI: Studio for AI Designers                                                 #
-# Version    : 0.1.4                                                                               #
-# Python     : 3.10.4                                                                              #
-# Filename   : /atelier/utils/logging.py                                                           #
-# ------------------------------------------------------------------------------------------------ #
-# Author     : John James                                                                          #
-# Email      : john.james.ai.studio@gmail.com                                                      #
-# URL        : https://github.com/john-james-ai/atelier-ai                                         #
-# ------------------------------------------------------------------------------------------------ #
-# Created    : Sunday November 13th 2022 12:05:36 pm                                               #
-# Modified   : Monday January 30th 2023 06:04:38 am                                                #
-# ------------------------------------------------------------------------------------------------ #
-# License    : MIT License                                                                         #
-# Copyright  : (c) 2022 John James                                                                 #
-# ================================================================================================ #
 import functools
 import logging
 
@@ -28,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 def log_start(module: str, classname: str, timer: Timer):
-
     date = timer.started.strftime("%m/%d/%Y")
     time = timer.stopped.strftime("%H:%M:%S")
 
@@ -39,7 +20,6 @@ def log_start(module: str, classname: str, timer: Timer):
 
 
 def log_end(module: str, classname: str, timer: Timer):
-
     date = timer.stopped.strftime("%m/%d/%Y")
     time = timer.stopped.strftime("%H:%M:%S")
     duration = timer.duration.as_string()
@@ -53,7 +33,6 @@ def log_end(module: str, classname: str, timer: Timer):
 def operator(func):
     @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
-
         module = func.__module__
         classname = func.__qualname__
 

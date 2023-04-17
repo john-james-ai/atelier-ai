@@ -2,17 +2,17 @@
 # -*- coding:utf-8 -*-
 # ================================================================================================ #
 # Project    : Atelier AI: Studio for AI Designers                                                 #
-# Version    : 0.1.4                                                                               #
-# Python     : 3.9.12                                                                              #
-# Filename   : /__init__.py                                                                        #
+# Version    : 0.1.19                                                                              #
+# Python     : 3.10.10                                                                             #
+# Filename   : /atelier/exceptions/__init__.py                                                     #
 # ------------------------------------------------------------------------------------------------ #
 # Author     : John James                                                                          #
 # Email      : john.james.ai.studio@gmail.com                                                      #
 # URL        : https://github.com/john-james-ai/atelier-ai                                         #
 # ------------------------------------------------------------------------------------------------ #
-# Created    : Thursday August 11th 2022 07:38:11 pm                                               #
-# Modified   : Thursday September 8th 2022 01:04:55 pm                                             #
+# Created    : Monday April 17th 2023 01:08:14 am                                                  #
+# Modified   : Monday April 17th 2023 02:09:31 am                                                  #
 # ------------------------------------------------------------------------------------------------ #
-# License    : BSD 3-clause "New" or "Revised" License                                             #
-# Copyright  : (c) 2022 John James                                                                 #
+# License    : MIT License                                                                         #
+# Copyright  : (c) 2023 John James                                                                 #
 # ================================================================================================ #
